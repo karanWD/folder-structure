@@ -5,22 +5,29 @@ type Props = {
   items: []
 }
 const ItemsContainer = ({items, insertHandler}) => {
-  const [isVisible, setVisible] = useState()
+  const [isVisible, setVisible] = useState([])
   const dropdownHandler = (e, id) => {
     e.stopPropagation()
-    setVisible(prev => prev === id ? null : id)
+    const visibleIndex = isVisible.findIndex(item => item === id)
+    if (visibleIndex === -1) {
+      setVisible(prev => [...prev, id])
+    } else {
+      let newArr = [...isVisible]
+      newArr.splice(visibleIndex, 1)
+      setVisible(newArr)
+    }
   }
 
   return (
       items.map((item, index) => {
-        const style = isVisible === item.id ? "max-h-[1000px]" : "max-h-[28px]"
+        const style = isVisible.find(value=>value===item.id) ? "max-h-full" : "max-h-[38px]"
         return (
-            <div className={`${style} overflow-hidden transition-all duration-500 ml-4`}
+            <div className={`${style} overflow-hidden transition-all duration-300 ml-4`}
                  onClick={(e) => dropdownHandler(e, item.id)}
                  key={"ITEM_" + item.id}
             >
-              <Item key={"ITEM_" + index} name={item.name} type={item.type} id={item.id}
-                    insertHandler={insertHandler} expanded={isVisible === item.id}/>
+              <Item  name={item.name} type={item.type} id={item.id}
+                    insertHandler={insertHandler} expanded={isVisible.find(value=>value===item.id)}/>
               {
                   item.children.length > 0 &&
                   <ItemsContainer items={item.children} insertHandler={insertHandler}/>

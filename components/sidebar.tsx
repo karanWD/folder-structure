@@ -111,7 +111,7 @@ const Sidebar = () => {
   }
 
   return (
-      <section className="w-4/12 bg-gray-900/40 h-full">
+      <section className="w-full lg:w-4/12 bg-gray-900/40 h-full">
         <div className="text-gray-300 text-2xl p-5 border-b border-gray-700/40">Shopino</div>
         <div className="flex items-center justify-between p-5">
           <div>Files</div>
