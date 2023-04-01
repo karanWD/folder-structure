@@ -4,10 +4,11 @@ import NewFileInput from "@/components/newFileInput";
 import NewFolderInput from "@/components/newFolderInput";
 import ItemsContainer from "@/components/itemsContainer";
 import {v4 as uuidv4} from 'uuid';
-import NewFolderSVG from "@/svgs/newFolderSVG";
-import NewFileSVG from "@/svgs/newFileSVG";
 import EditModal from "@/components/editModal";
 import DeleteModal from "@/components/deleteModal";
+import {findItem} from "@/utils/findItem";
+import ActionsButton from "@/components/actionsButton";
+import {createPortal} from "react-dom";
 
 type Items = {
   id: string
@@ -17,52 +18,21 @@ type Items = {
 }
 
 const Sidebar = () => {
-  const [items, setItems] = useState<>([])
+  //States
+  const [items, setItems] = useState<Array<Items>>([])
   const [itemId, setItemId] = useState()
   const [modalType, setModalType] = useState<"FOLDER" | "FILE" | null>(null)
-  const findItem = (arr, id) => {
-    let res = null
-    const iterate = (arr, id) => {
-      for (let item of arr) {
-        if (item.id === id) {
-          res = item
-        } else {
-          if (item.children.length > 0) {
-            iterate(item.children, id)
-          }
-        }
-      }
-    }
-    iterate(arr, id)
-    return res
-  }
 
-  const createFolder = (name, id) => {
-    const newItem = {
+  //Functions
+  const create = (name, id,type) => {
+    const newItem:Items = {
       id: uuidv4(),
       name,
-      type: "FOLDER",
+      type,
       children: []
     }
     if (!id) {
-      setItems(prev => [...prev, newItem])
-    } else {
-      const newArr = [...items]
-      findItem(newArr, id).children.push(newItem)
-      setItems([...newArr])
-      setItemId(null)
-    }
-    setModalType(null)
-  }
-  const createFile = (name, id) => {
-    const newItem = {
-      id: uuidv4(),
-      name,
-      type: "FILE",
-      children: []
-    }
-    if (!id) {
-      setItems(prev => [...prev, newItem])
+      setItems((prev ) => [...prev, newItem])
     } else {
       const newArr = [...items]
       findItem(newArr, id).children.push(newItem)
@@ -103,9 +73,10 @@ const Sidebar = () => {
     setItemId(null)
   }
 
+
   const Inputs = {
-    "FILE": <NewFileInput closeHandler={closeModal} submitHandler={(value) => createFile(value, itemId ?? null)}/>,
-    "FOLDER": <NewFolderInput closeHandler={closeModal} submitHandler={(value) => createFolder(value, itemId ?? null)}/>,
+    "FILE": <NewFileInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId ?? null,type)}/>,
+    "FOLDER": <NewFolderInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId ?? null,type)}/>,
     "EDIT": <EditModal closeHandler={closeModal} editHandler={(value) => editHandler(value, itemId)} defaultValue={findItem(items, itemId)}/>,
     "DELETE": <DeleteModal deleteHandler={() => deleteHandler(items, itemId)}/>
   }
@@ -116,22 +87,12 @@ const Sidebar = () => {
         <div className="flex items-center justify-between p-5">
           <div>Files</div>
           <div className="flex gap-4 text-gray-300 text-xs ">
-            <div className="hover:text-white cursor-pointer flex items-center gap-2"
-                 onClick={() => setModalType("FOLDER")}>
-              <span className=" w-4 h-4 relative inline-block"><NewFolderSVG/></span>
-              New Folder
-            </div>
-            <div className="hover:text-white cursor-pointer flex items-center gap-2"
-                 onClick={() => setModalType("FILE")}>
-              <span className=" w-4 h-4 relative inline-block"><NewFileSVG/></span>
-              New File
-            </div>
+           <ActionsButton hasText={true} clickHandler={() => setModalType("FOLDER")} type={"FOLDER"}/>
+           <ActionsButton hasText={true} clickHandler={() => setModalType("FILE")} type={"FILE"}/>
           </div>
         </div>
         <ItemsContainer items={items} insertHandler={insertHandler}/>
-        <Modal isOpen={!!modalType} closeHandler={closeModal}>
-          {Inputs[modalType]}
-        </Modal>
+        {!!modalType && createPortal(<Modal closeHandler={closeModal}>{Inputs[modalType]}</Modal>, document.body)}
       </section>
   )
 }

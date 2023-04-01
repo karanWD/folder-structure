@@ -6,7 +6,7 @@ const NewFileInput = ({submitHandler,closeHandler}) => {
   const inputRef = useRef(null)
   const formHandler=(e)=>{
     e.preventDefault()
-    submitHandler(value)
+    submitHandler(value,"FILE")
   }
   const clickHandler=(e)=>{if(e.key === "Escape") {closeHandler()}}
   useEffect(() => {

@@ -15,6 +15,7 @@ export default function Home() {
       <main className="flex h-screen relative bg-gray-800 w-full ">
         <Sidebar/>
         <Content/>
+
       </main>
     </>
   )

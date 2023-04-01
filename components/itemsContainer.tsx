@@ -1,9 +1,6 @@
 import React, {useState} from "react";
 import Item from "@/components/item";
 
-type Props = {
-  items: []
-}
 const ItemsContainer = ({items, insertHandler}) => {
   const [isVisible, setVisible] = useState([])
   const dropdownHandler = (e, id) => {
@@ -19,7 +16,7 @@ const ItemsContainer = ({items, insertHandler}) => {
   }
 
   return (
-      items.map((item, index) => {
+      items.map((item) => {
         const style = isVisible.find(value=>value===item.id) ? "max-h-full" : "max-h-[38px]"
         return (
             <div className={`${style} overflow-hidden transition-all duration-300 ml-4`}
