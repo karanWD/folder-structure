@@ -1,6 +1,6 @@
-export const findItem = (arr, id) => {
+export const findItem = (arr:any[], id:string):any => {
   let res = null
-  const iterate = (arr, id) => {
+  const iterate = (arr:any[], id:string) => {
     for (let item of arr) {
       if (item.id === id) {
         res = item

@@ -1,14 +1,24 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 
-
-const NewFileInput = ({submitHandler,closeHandler}) => {
+type Props = {
+  submitHandler: (value:string,type:"FILE"|"FOLDER") => void
+  closeHandler: () => void
+}
+const NewFileInput: FC<Props> = ({submitHandler, closeHandler}) => {
   const [value, setValue] = useState<string>("")
-  const inputRef = useRef(null)
-  const formHandler=(e)=>{
+  const inputRef = useRef<any>(null)
+
+  const formHandler = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault()
-    submitHandler(value,"FILE")
+    if (value){
+    submitHandler(value, "FILE")
+    }else(alert("File should have a name "))
   }
-  const clickHandler=(e)=>{if(e.key === "Escape") {closeHandler()}}
+  const clickHandler = (e:React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      closeHandler()
+    }
+  }
   useEffect(() => {
     inputRef.current.focus()
   }, [])
@@ -19,7 +29,9 @@ const NewFileInput = ({submitHandler,closeHandler}) => {
           <input type="text" ref={inputRef} value={value} placeholder="like app.js"
                  onChange={e => setValue(e.target.value)} onKeyUp={clickHandler}
                  className="p-2 bg-gray-800 border border-gray-700 rounded-lg"/>
-          <button className="my-2 py-3 rounded-lg border border-gray-800 hover:bg-gray-800" onClick={formHandler}>create file</button>
+          <button className="my-2 py-3 rounded-lg border border-gray-800 hover:bg-gray-800" onClick={formHandler}>create
+            file
+          </button>
         </form>
 
       </div>

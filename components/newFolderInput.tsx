@@ -1,14 +1,20 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 
 
-const NewFolderInput = ({submitHandler,closeHandler}) => {
+type Props = {
+  submitHandler: (value:string,type:"FILE"|"FOLDER") => void
+  closeHandler: () => void
+}
+const NewFolderInput:FC<Props> = ({submitHandler,closeHandler}) => {
   const [value, setValue] = useState<string>("")
-  const inputRef = useRef(null)
-  const formHandler=(e)=>{
+  const inputRef = useRef<any>(null)
+  const formHandler=(e: React.FormEvent<HTMLElement>)=>{
     e.preventDefault()
+    if (value){
     submitHandler(value,"FOLDER")
+    }else{alert("Folder should have a name")}
   }
-  const clickHandler=(e)=>{if(e.key === "Escape") {closeHandler()}}
+  const clickHandler=(e:React.KeyboardEvent<HTMLInputElement>)=>{if(e.key === "Escape") {closeHandler()}}
   useEffect(() => {
     inputRef.current.focus()
   }, [])

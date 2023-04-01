@@ -5,7 +5,7 @@ import NewFileSVG from "@/svgs/newFileSVG";
 type Props={
   type:"FOLDER"|"FILE"
   hasText:boolean
-  clickHandler:Function
+  clickHandler:()=>void
 }
 const ActionsButton:FC<Props> = ({hasText=false,clickHandler,type}) =>{
   const TYPES = {

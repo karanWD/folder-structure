@@ -20,11 +20,11 @@ type Items = {
 const Sidebar = () => {
   //States
   const [items, setItems] = useState<Array<Items>>([])
-  const [itemId, setItemId] = useState()
-  const [modalType, setModalType] = useState<"FOLDER" | "FILE" | null>(null)
+  const [itemId, setItemId] = useState<string | null>(null)
+  const [modalType, setModalType] = useState<"FOLDER" | "FILE" |"EDIT"|"DELETE" | null>(null)
 
   //Functions
-  const create = (name, id,type) => {
+  const create = (name:string,id:string,type:"FILE"|"FOLDER") => {
     const newItem:Items = {
       id: uuidv4(),
       name,
@@ -41,15 +41,15 @@ const Sidebar = () => {
     }
     setModalType(null)
   }
-  const editHandler = (value, id) => {
+  const editHandler = (value:string , id:string) => {
     const newArr = [...items]
     findItem(newArr, id).name = value
     setItems([...newArr])
     setItemId(null)
     setModalType(null)
   }
-  const deleteHandler = (arr, id) => {
-    const iterate = (arr, id) => {
+  const deleteHandler = (arr:Items[], id:string) => {
+    const iterate = (arr:Items[], id:string) => {
       for (let item of arr) {
         if(item.id===id){
           let targetIndex = arr.findIndex(item=>item.id===id)
@@ -64,7 +64,7 @@ const Sidebar = () => {
     setItemId(null)
     setModalType(null)
   }
-  const insertHandler = (type, id) => {
+  const insertHandler = (type:"FILE"|"FOLDER"|"EDIT"|"DELETE", id:string) => {
     setModalType(type)
     setItemId(id)
   }
@@ -75,10 +75,10 @@ const Sidebar = () => {
 
 
   const Inputs = {
-    "FILE": <NewFileInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId ?? null,type)}/>,
-    "FOLDER": <NewFolderInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId ?? null,type)}/>,
-    "EDIT": <EditModal closeHandler={closeModal} editHandler={(value) => editHandler(value, itemId)} defaultValue={findItem(items, itemId)}/>,
-    "DELETE": <DeleteModal deleteHandler={() => deleteHandler(items, itemId)}/>
+    "FILE": <NewFileInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId as string ?? null,type)}/>,
+    "FOLDER": <NewFolderInput closeHandler={closeModal} submitHandler={(value,type) => create(value, itemId as string ?? null,type)}/>,
+    "EDIT": <EditModal closeHandler={closeModal} editHandler={(value) => editHandler(value, itemId as string)} defaultValue={findItem(items, itemId as string)}/>,
+    "DELETE": <DeleteModal deleteHandler={() => deleteHandler(items, itemId as string)}/>
   }
 
   return (

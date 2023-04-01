@@ -1,6 +1,9 @@
-import React from "react";
+import React, {FC} from "react";
 
-const DeleteModal = ({deleteHandler}) =>{
+type Props = {
+  deleteHandler:()=>void
+}
+const DeleteModal:FC<Props> = ({deleteHandler}) =>{
   return(
       <div className="flex flex-col bg-gray-900 w-[25vw] p-4">
         <div>Are you sure you want to delete it?</div>

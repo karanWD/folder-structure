@@ -1,13 +1,19 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 
-const EditModal = ({editHandler, defaultValue,closeHandler}) => {
+type Props={
+  editHandler:(value:string,defaultValue:{})=>void,
+  defaultValue:{name:string},
+  closeHandler:()=>void
+}
+const EditModal:FC<Props> = ({editHandler, defaultValue,closeHandler}) => {
   const [value, setValue] = useState<string>("")
-  const inputRef = useRef(null)
-  const submitHandler=(e)=>{e.preventDefault();editHandler(value,defaultValue)}
-  const clickHandler=(e)=>{if(e.key === "Escape") {closeHandler()}}
+  const inputRef = useRef<any>(null)
+  const submitHandler=(e:React.FormEvent<HTMLElement>)=>{e.preventDefault();if (value) {editHandler(value, defaultValue)}else{alert("It cant be empty")}
+  }
+  const clickHandler=(e:React.KeyboardEvent)=>{if(e.key === "Escape") {closeHandler()}}
 
   useEffect(() => {
-    inputRef.current.focus()
+    inputRef?.current?.focus()
     defaultValue&&
     setValue(defaultValue.name)
   }, [defaultValue])

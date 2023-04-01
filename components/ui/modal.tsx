@@ -2,7 +2,7 @@ import React, {FC, ReactElement, ReactNode} from "react";
 
 
 type Props = {
-  closeHandler: Function
+  closeHandler: ()=>void
   children: ReactElement
 }
 const Modal: FC<Props> = ({children, closeHandler}) => {
